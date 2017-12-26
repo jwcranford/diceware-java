@@ -10,7 +10,8 @@ import java.util.List;
 
 /**
  * Command-line application that generates a passphrase using the diceware
- * method described at http://www.diceware.com.
+ * method described at
+ * http://world.std.com/%7Ereinhold/dicewarefaq.html#computer.
  * 
  * @author Jonathan W. Cranford
  */
