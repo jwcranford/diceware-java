@@ -1,4 +1,4 @@
-package jwc;
+package com.github.jwcranford;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,9 +10,9 @@ import java.util.List;
 
 /**
  * Command-line application that generates a passphrase using the diceware
- * method described at http://world.std.com/%7Ereinhold/dicewarefaq.html#computer.
+ * method described at http://www.diceware.com.
  * 
- * @author jwcranford
+ * @author Jonathan W. Cranford
  */
 public final class Diceware {
 
@@ -37,9 +37,9 @@ public final class Diceware {
 	}
 
 	private static void usage(PrintStream out) {
-		out.println("diceware -h | --help");
+		out.println("diceware-java -h | --help");
 		out.println("	Prints this summary.");
-		out.println("diceware [w [p]]");
+		out.println("diceware-java [w [p]]");
 		out.println("	Generates p phrases of w words each. ");
 		out.println("	Default is 20 phrases of 5 words each.");
 	}

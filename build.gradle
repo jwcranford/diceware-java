@@ -1,13 +1,13 @@
-apply plugin: 'java'
+apply plugin: 'application'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 version = '0.1'
+mainClassName = 'com.github.jwcranford.Diceware'
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Diceware',
-                'Implementation-Version': version,
-                'Main-Class': 'jwc.Diceware'
+        attributes 'Implementation-Version': version,
+                'Main-Class': mainClassName
     }
 }
