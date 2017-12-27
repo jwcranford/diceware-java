@@ -4,6 +4,8 @@ A Java command-line tool to generate passphrases based on the diceware
 method described at
 http://world.std.com/~reinhold/dicewarefaq.html#computer.
 
+TODO: Rename the software to avoid a trademark issue with Diceware.
+
 ## To build
 
 Gradle and Java 8 are required to build diceware-java.

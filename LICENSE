@@ -5,8 +5,13 @@ Copyright (c) 2017 Jonathan W. Cranford
 Diceware is Copyright © 1995-2017, Arnold G. Reinhold, Cambridge,
 Massachusetts USA. To the extent that a word list is protected by
 copyright, A G Reinhold licenses its rights to the English Diceware
-Wordlist under the Creative Commons CC-BY 4.0 license. Diceware is a
+Wordlist under the Creative Commons CC-BY 4.0 license
+(https://creativecommons.org/licenses/by/4.0/). Diceware is a
 trademark of A G Reinhold.
+
+In accordance with the Creative Commons CC-BY 4.0 license, no changes
+have been made to the diceware8k.txt file distributed with this
+software.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
