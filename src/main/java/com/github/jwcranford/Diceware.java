@@ -42,12 +42,12 @@ public final class Diceware {
 		out.println("	Prints this summary.");
 		out.println("diceware-java [w [p]]");
 		out.println("	Generates p phrases of w words each. ");
-		out.println("	Default is 20 phrases of 5 words each.");
+		out.println("	Default is 20 phrases of 6 words each.");
 	}
 
 	// Takes an optional argument for the number of words in the passphrase.
 	public static void main(String[] args) throws IOException {
-		int numWords = 5;
+		int numWords = 6;
 		int numPhrases = 20;
 		
 		if (args != null && args.length >= 1) {
