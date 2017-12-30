@@ -42,6 +42,9 @@ the deployment.
 
 ## Usage
 
+pphrasegen requires Java 8. Download and install the JRE from
+https://java.com if you haven't already.
+
 ```
 pphrasegen -h | --help
    Prints this summary.
@@ -100,6 +103,8 @@ From http://world.std.com/~reinhold/dicewarefaq.html#entropy:
 
 
 ## Word lists distributed with pphrasegen
+
+The following files are included in the word-lists directory.
 
 <table>
 <tr>
@@ -242,7 +247,7 @@ See the LICENSE file for full copyright details on the distributed
 word lists.
 
 
-## To build
+## Building from source
 
 Gradle and Java 8 are required to build pphrasegen.
 
