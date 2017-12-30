@@ -1,4 +1,4 @@
-package com.github.jwcranford;
+package com.github.jwcranford.pphrasegen;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -17,7 +17,7 @@ import java.util.List;
  * 
  * @author Jonathan W. Cranford
  */
-public final class Diceware {
+public final class PassphraseGenerator {
 
     private static final int MAX_DICEWARE_SIZE = 8192;
     private static final double DEFAULT_TARGET_ENTROPY = 75.0;
@@ -31,7 +31,7 @@ public final class Diceware {
 
     private final SecureRandom rand = new SecureRandom();
 
-    public Diceware(final InputStream in, final double targetEntropy) throws IOException {
+    public PassphraseGenerator(final InputStream in, final double targetEntropy) throws IOException {
         try (final BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"))) {
             String line = null;
             while ((line = br.readLine()) != null) {
@@ -63,9 +63,9 @@ public final class Diceware {
     }
 
     private static void usage(PrintStream out) {
-        out.println("diceware-java -h | --help");
+        out.println("pphrasegen -h | --help");
         out.println("   Prints this summary.");
-        out.println("diceware-java file [w [p]]");
+        out.println("pphrasegen file [w [p]]");
         out.println("   Generates p passphrases of w words each from the given file. ");
         out.format("   The default behavior is to generate %d passphrases with enough words each",
                 DEFAULT_NUM_PASSPHRASES);
@@ -99,7 +99,7 @@ public final class Diceware {
             System.exit(1);
         }
         final String file = args[nextArg++];
-        final Diceware dice = new Diceware(new FileInputStream(file), DEFAULT_TARGET_ENTROPY);
+        final PassphraseGenerator dice = new PassphraseGenerator(new FileInputStream(file), DEFAULT_TARGET_ENTROPY);
         int numWords = dice.defaultWordsInPassphrase;
         if (nextArg < args.length) {
             numWords = Integer.parseInt(args[nextArg++]);
