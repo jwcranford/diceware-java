@@ -50,6 +50,9 @@ per word, with an 8-word passphrase providing 80 bits of entropy.
 
 # Word lists included with diceware-java
 
+The following files appear in the src/main/resources directory and are
+included in releases.
+
 <table>
 <tr>
     <th>File</th>
