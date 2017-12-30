@@ -50,7 +50,7 @@ per word, with an 8-word passphrase providing 80 bits of entropy.
 
 ## Word lists included with pphrasegen
 
-The following files appear in the src/main/resources directory.
+The following files appear in the src/dist directory.
 
 <table>
 <tr>
