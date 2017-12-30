@@ -50,8 +50,7 @@ per word, with an 8-word passphrase providing 80 bits of entropy.
 
 # Word lists included with diceware-java
 
-The following files appear in the src/main/resources directory and are
-included in releases.
+The following files appear in the src/main/resources directory.
 
 <table>
 <tr>
@@ -65,8 +64,11 @@ included in releases.
     <th>Average passphrase length for at least 75 entropy bits [A*W]</th>
 </tr>
 <tr>
-    <td>diceware.txt</td>
-    <td>Standard Diceware word list (from http://www.diceware.com)</td>
+    <td>diceware.txt and beale.wordlist.txt</td>
+    <td>Standard Diceware word list and alternative word list edited by Alan Beale
+    (adapted from http://www.diceware.com).
+    The original lists were modified to remove any PGP signatures and the mapping to actual dice to obtain
+    simply the words from the list.</td>
     <td>7776</td>
     <td>4096</td>
     <td>12</td>
@@ -75,18 +77,21 @@ included in releases.
     <td>30.5</td>
 </tr>
 <tr>
-    <td>diceware8k.txt</td>
-    <td>Diceware 8k word list (from http://world.std.com/%7Ereinhold/dicewarefaq.html#computer)</td>
+    <td>diceware8k.txt and beale.wordlist.8k.txt</td>
+    <td>Diceware 8k word list (from http://world.std.com/%7Ereinhold/dicewarefaq.html#computer).
+    beale.wordlist.8k.txt was created by extending beale.wordlist.txt with the same bigrams as were added to diceware8k.txt; see
+    http://world.std.com/%7Ereinhold/dicewarefaq.html#diceware8k for details.</td>
     <td>8192</td>
     <td>8192</td>
     <td>13</td>
     <td>4.1</td> 
     <td>6</td>
-    <td>24.6</td>
+    <td>25</td>
 </tr>
 <tr>
     <td>eff_large_wordlist.txt</td>
-    <td>EFF Large word list (from https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases)</td>
+    <td>EFF Large word list (from https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases),
+    modified to remove the mapping to actual dice to obtain simply the words from the list.</td>
     <td>7776</td>
     <td>4096</td>
     <td>12</td>
@@ -96,7 +101,10 @@ included in releases.
 </tr>
 <tr>
     <td>eff_short_wordlist_1.txt</td>
-    <td>First EFF Short word list (from https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases)</td>
+    <td>First EFF Short word list (from https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases),
+    modified to
+        remove the mapping to actual dice to obtain
+        simply the words from the list.</td>
     <td>1296</td>
     <td>1024</td>
     <td>10</td>
@@ -106,7 +114,7 @@ included in releases.
 </tr>
 <tr>
     <td>eff_large_wordlist.8k.txt</td>
-    <td>EFF Large word list extended with same bigrams as diceware8k.txt (see http://world.std.com/%7Ereinhold/dicewarefaq.html#diceware8k)</td>
+    <td>EFF Large word list extended with same bigrams as diceware8k.txt</td>
     <td>8192</td>
     <td>8192</td>
     <td>13</td>
