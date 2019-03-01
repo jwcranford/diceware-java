@@ -31,7 +31,7 @@ public final class PassphraseGenerator {
 
     private final SecureRandom rand = new SecureRandom();
 
-    public PassphraseGenerator(final InputStream in, final double targetEntropy) throws IOException {
+    private PassphraseGenerator(final InputStream in, final double targetEntropy) throws IOException {
         try (final BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"))) {
             String line = null;
             while ((line = br.readLine()) != null) {
@@ -44,12 +44,12 @@ public final class PassphraseGenerator {
     }
 
     /** Generates next word at random from word list. */
-    public String nextWord() {
+    private String nextWord() {
         return words.get(rand.nextInt(effectiveWordListSize));
     }
 
     /** Generates next passphrase with given number of words. */
-    public String nextPassphrase(int numberWords) {
+    private String nextPassphrase(int numberWords) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < numberWords; i++) {
             sb.append(nextWord()).append(' ');
@@ -58,7 +58,7 @@ public final class PassphraseGenerator {
     }
 
     /** Generates next passphrase with default number of words. */
-    public String nextPassphrase() {
+    private String nextPassphrase() {
         return nextPassphrase(defaultWordsInPassphrase);
     }
 
@@ -67,15 +67,12 @@ public final class PassphraseGenerator {
         out.println("   Prints this summary.");
         out.println("pphrasegen file [w [p]]");
         out.println("   Generates p passphrases of w words each from the given file. ");
-        out.format("   The default behavior is to generate %d passphrases with enough words each",
+        out.format("   The default behavior is to generate %d passphrases, with the number",
                 DEFAULT_NUM_PASSPHRASES);
         out.println();
-        out.format("   to get at least %.0f bits of entropy in each passphrase, according to",
-                DEFAULT_TARGET_ENTROPY);
+        out.println("   of words in each passphrase depending on the size of the input file.");
         out.println();
-        out.println("   the size of the word list.");
-        out.println();
-        out.println("      # of words in list   # of words in passphrase");
+        out.println("      # of words in file   # of words in passphrase");
         out.println("      ------------------   ------------------------");
         out.println("                    1024                          8");
         out.println("                    2048                          7");
@@ -83,7 +80,7 @@ public final class PassphraseGenerator {
         out.println("                    8192                          6");
     }
 
-    // Takes an optional argument for the number of words in the passphrase.
+
     public static void main(String[] args) throws IOException {
         int numPhrases = DEFAULT_NUM_PASSPHRASES;
 
