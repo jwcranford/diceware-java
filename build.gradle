@@ -7,6 +7,19 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 mainClassName = 'com.github.jwcranford.pphrasegen.PassphraseGenerator'
 
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.0")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.0")
+}
+
+test {
+  useJUnitPlatform()
+}
+
 jar {
     manifest {
         attributes 'Implementation-Version': version,
