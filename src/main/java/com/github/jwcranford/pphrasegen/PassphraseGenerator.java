@@ -69,8 +69,8 @@ public final class PassphraseGenerator {
 
     int nextArg=0;
     if ("-h".equals(args[nextArg]) || "--help".equals(args[nextArg])) {
-      usage(System.err);
-      System.exit(1);
+      usage(System.out);
+      System.exit(0);
     }
     final String file = args[nextArg++];
     final PassphraseGenerator dice = new PassphraseGenerator(file);
