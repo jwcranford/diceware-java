@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Command-line application that generates a passphrase using the diceware
@@ -19,15 +20,10 @@ public final class PassphraseGenerator {
   private static final double DEFAULT_TARGET_ENTROPY = 75.0;
   private static final int DEFAULT_NUM_PASSPHRASES = 20;
 
-  private final SecureRandom rand = new SecureRandom();
   private final RandomWordGenerator primaryWordGenerator;
 
-  private PassphraseGenerator(final String file) throws IOException {
-    this(Files.readAllLines(Paths.get(file)));
-  }
-
-  private PassphraseGenerator(final List<String> words) {
-    primaryWordGenerator = new RandomWordGenerator(rand, words);
+  PassphraseGenerator(RandomWordGenerator primaryWordGenerator) {
+    this.primaryWordGenerator = primaryWordGenerator;
   }
 
   /** Generates next passphrase with given number of words. */
@@ -73,7 +69,7 @@ public final class PassphraseGenerator {
       System.exit(0);
     }
     final String file = args[nextArg++];
-    final PassphraseGenerator dice = new PassphraseGenerator(file);
+    final PassphraseGenerator dice = new PassphraseGenerator(new RandomWordGenerator(new SecureRandom(), Files.readAllLines(Paths.get(file))));
     int numWords = (int) Math.ceil(dice.primaryWordGenerator.entropyCalculator.calculateWordCount(DEFAULT_TARGET_ENTROPY));
     if (nextArg < args.length) {
       numWords = Integer.parseInt(args[nextArg++]);
@@ -123,10 +119,10 @@ class EntropyCalculator {
 
 class RandomWordGenerator {
   private final List<String> words;
-  private final SecureRandom random;
+  private final Random random;
   final EntropyCalculator entropyCalculator;
 
-  RandomWordGenerator(SecureRandom random, List<String> words) {
+  RandomWordGenerator(Random random, List<String> words) {
     this.words = words;
     this.random = random;
     this.entropyCalculator = new EntropyCalculator(words.size());
