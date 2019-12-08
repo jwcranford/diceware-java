@@ -10,7 +10,7 @@ class EntropyCalculatorSpec extends Specification {
 
     expect:
     1024 == calc.getEffectiveWordListSize()
-    8 == (int) Math.ceil(calc.calculateWordCount(75))
+    10 == calc.getEntropyPerWord()
   }
 
   def testNotPowerOfTwo() {
@@ -19,6 +19,6 @@ class EntropyCalculatorSpec extends Specification {
 
     expect:
     1024 == calc.getEffectiveWordListSize()
-    8 == (int) Math.ceil(calc.calculateWordCount(75))
+    10 == calc.getEntropyPerWord()
   }
 }

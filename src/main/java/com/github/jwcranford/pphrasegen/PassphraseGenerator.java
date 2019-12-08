@@ -7,6 +7,9 @@ import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Command-line application that generates a passphrase using the diceware
@@ -28,11 +31,7 @@ public final class PassphraseGenerator {
 
   /** Generates next passphrase with given number of words. */
   private String nextPassphrase(int numberWords) {
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < numberWords; i++) {
-      sb.append(primaryWordGenerator.nextWord()).append(' ');
-    }
-    return sb.toString();
+    return Stream.generate(primaryWordGenerator).limit(numberWords).collect(Collectors.joining(" "));
   }
 
   private static void usage(PrintStream out) {
@@ -70,7 +69,7 @@ public final class PassphraseGenerator {
     }
     final String file = args[nextArg++];
     final PassphraseGenerator dice = new PassphraseGenerator(new RandomWordGenerator(new SecureRandom(), Files.readAllLines(Paths.get(file))));
-    int numWords = (int) Math.ceil(dice.primaryWordGenerator.entropyCalculator.calculateWordCount(DEFAULT_TARGET_ENTROPY));
+    int numWords = (int) Math.ceil(dice.primaryWordGenerator.calculateWordCount(DEFAULT_TARGET_ENTROPY));
     if (nextArg < args.length) {
       numWords = Integer.parseInt(args[nextArg++]);
       if (nextArg < args.length) {
@@ -99,10 +98,6 @@ class EntropyCalculator {
     this.dictionarySize = dictionarySize;
   }
 
-  double calculateWordCount(double targetEntropy) {
-    return targetEntropy / getEntropyPerWord();
-  }
-
   int getEntropyPerWord() {
     return (int) (Math.log(dictionarySize) / Math.log(2));
   }
@@ -117,10 +112,10 @@ class EntropyCalculator {
 }
 
 
-class RandomWordGenerator {
+class RandomWordGenerator implements Supplier<String> {
   private final List<String> words;
   private final Random random;
-  final EntropyCalculator entropyCalculator;
+  private final EntropyCalculator entropyCalculator;
 
   RandomWordGenerator(Random random, List<String> words) {
     this.words = words;
@@ -129,7 +124,11 @@ class RandomWordGenerator {
   }
 
   /** Generates next word at random from word list. */
-  String nextWord() {
+  public String get() {
     return words.get(random.nextInt(entropyCalculator.getEffectiveWordListSize()));
+  }
+
+  double calculateWordCount(double targetEntropy) {
+    return targetEntropy / entropyCalculator.getEntropyPerWord();
   }
 }
