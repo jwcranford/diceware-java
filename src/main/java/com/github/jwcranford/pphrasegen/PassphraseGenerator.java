@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,15 +24,20 @@ public final class PassphraseGenerator {
   private static final double DEFAULT_TARGET_ENTROPY = 75.0;
   private static final int DEFAULT_NUM_PASSPHRASES = 20;
 
-  private final RandomWordGenerator primaryWordGenerator;
+  private final Supplier<String> primaryWordGenerator;
 
-  PassphraseGenerator(RandomWordGenerator primaryWordGenerator) {
+  PassphraseGenerator(Supplier<String> primaryWordGenerator) {
     this.primaryWordGenerator = primaryWordGenerator;
   }
 
   /** Generates next passphrase with given number of words. */
   private String nextPassphrase(int numberWords) {
     return Stream.generate(primaryWordGenerator).limit(numberWords).collect(Collectors.joining(" "));
+  }
+
+  void generatePassphrases(int numPhrases, int numWords, Consumer<String> passphraseCallback) {
+    Stream.generate(() -> nextPassphrase(numWords)).limit(numPhrases)
+        .forEach(passphraseCallback);
   }
 
   private static void usage(PrintStream out) {
@@ -68,8 +74,9 @@ public final class PassphraseGenerator {
       System.exit(0);
     }
     final String file = args[nextArg++];
-    final PassphraseGenerator dice = new PassphraseGenerator(new RandomWordGenerator(new SecureRandom(), Files.readAllLines(Paths.get(file))));
-    int numWords = (int) Math.ceil(dice.primaryWordGenerator.calculateWordCount(DEFAULT_TARGET_ENTROPY));
+    RandomWordGenerator primaryWordGenerator = new RandomWordGenerator(new SecureRandom(), Files.readAllLines(Paths.get(file)));
+    final PassphraseGenerator dice = new PassphraseGenerator(primaryWordGenerator);
+    int numWords = (int) Math.ceil(primaryWordGenerator.calculateWordCount(DEFAULT_TARGET_ENTROPY));
     if (nextArg < args.length) {
       numWords = Integer.parseInt(args[nextArg++]);
       if (nextArg < args.length) {
@@ -77,11 +84,9 @@ public final class PassphraseGenerator {
       }
     }
 
-    for (int count = 0; count < numPhrases; count++) {
-      System.out.print(dice.nextPassphrase(numWords));
-      System.out.println();
-    }
+    dice.generatePassphrases(numPhrases, numWords, System.out::println);
   }
+
 
 }
 
