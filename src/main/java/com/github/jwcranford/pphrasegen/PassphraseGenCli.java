@@ -19,26 +19,9 @@ import java.util.stream.Stream;
  *
  * @author Jonathan W. Cranford
  */
-public final class PassphraseGenerator {
-
+public final class PassphraseGenCli {
   private static final double DEFAULT_TARGET_ENTROPY = 75.0;
   private static final int DEFAULT_NUM_PASSPHRASES = 20;
-
-  private final Supplier<String> primaryWordGenerator;
-
-  PassphraseGenerator(Supplier<String> primaryWordGenerator) {
-    this.primaryWordGenerator = primaryWordGenerator;
-  }
-
-  /** Generates next passphrase with given number of words. */
-  private String nextPassphrase(int numberWords) {
-    return Stream.generate(primaryWordGenerator).limit(numberWords).collect(Collectors.joining(" "));
-  }
-
-  void generatePassphrases(int numPhrases, int numWords, Consumer<String> passphraseCallback) {
-    Stream.generate(() -> nextPassphrase(numWords)).limit(numPhrases)
-        .forEach(passphraseCallback);
-  }
 
   private static void usage(PrintStream out) {
     out.println("pphrasegen -h | --help");
@@ -86,7 +69,26 @@ public final class PassphraseGenerator {
 
     dice.generatePassphrases(numPhrases, numWords, System.out::println);
   }
+}
 
+
+final class PassphraseGenerator {
+
+  private final Supplier<String> primaryWordGenerator;
+
+  PassphraseGenerator(Supplier<String> primaryWordGenerator) {
+    this.primaryWordGenerator = primaryWordGenerator;
+  }
+
+  /** Generates next passphrase with given number of words. */
+  private String nextPassphrase(int numberWords) {
+    return Stream.generate(primaryWordGenerator).limit(numberWords).collect(Collectors.joining(" "));
+  }
+
+  void generatePassphrases(int numPhrases, int numWords, Consumer<String> passphraseCallback) {
+    Stream.generate(() -> nextPassphrase(numWords)).limit(numPhrases)
+        .forEach(passphraseCallback);
+  }
 
 }
 
