@@ -1,12 +1,17 @@
 package com.github.jwcranford.pphrasegen;
 
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
+
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -19,56 +24,52 @@ import java.util.stream.Stream;
  *
  * @author Jonathan W. Cranford
  */
-public final class PassphraseGenCli {
+@Command(name="pphrasegen", description="Generates passphrases based on a given word file.",
+    mixinStandardHelpOptions = true, version="pphrasegen 0.4.0")
+public final class PassphraseGenCli implements Callable<Integer> {
+
   private static final double DEFAULT_TARGET_ENTROPY = 75.0;
   private static final int DEFAULT_NUM_PASSPHRASES = 20;
 
-  private static void usage(PrintStream out) {
-    out.println("pphrasegen -h | --help");
-    out.println("   Prints this summary.");
-    out.println("pphrasegen file [w [p]]");
-    out.println("   Generates p passphrases of w words each from the given file. ");
-    out.format("   The default behavior is to generate %d passphrases, with the number",
-        DEFAULT_NUM_PASSPHRASES);
-    out.println();
-    out.println("   of words in each passphrase depending on the size of the input file.");
-    out.println();
-    out.println("      # of words in file   # of words in passphrase");
-    out.println("      ------------------   ------------------------");
-    out.println("                    1024                          8");
-    out.println("                    2048                          7");
-    out.println("                    4096                          7");
-    out.println("                    8192                          6");
-  }
+  @Parameters(index = "0",
+      description = "The file of words to use when generating a passphrase. The file contains one word per line.")
+  private Path wordFile;
+
+  @Option(names = { "-c", "--count"}, description = "Number of passphrases to generate (${DEFAULT-VALUE} by default)")
+  private int count = DEFAULT_NUM_PASSPHRASES;
+
+  @Option(names = { "-w", "--words"},
+      description={
+          "Number of words to include in each passphrase.",
+          "By default, the number of words in each passphrase depends on the size of the input file.",
+          "      # of words in file   # of words in passphrase",
+          "      ------------------   ------------------------",
+          "                    1024                          8",
+          "                    2048                          7",
+          "                    4096                          7",
+          "                    8192                          6"
+      })
+  private int wordCount;
 
 
-  public static void main(String[] args) throws IOException {
-    int numPhrases = DEFAULT_NUM_PASSPHRASES;
 
-    if (args == null || args.length < 1) {
-      System.err.println("Missing file argument!");
-      usage(System.err);
-      System.exit(2);
-    }
-
-    int nextArg=0;
-    if ("-h".equals(args[nextArg]) || "--help".equals(args[nextArg])) {
-      usage(System.out);
-      System.exit(0);
-    }
-    final String file = args[nextArg++];
-    RandomWordGenerator primaryWordGenerator = new RandomWordGenerator(new SecureRandom(), Files.readAllLines(Paths.get(file)));
+  @Override
+  public Integer call() throws IOException {
+    RandomWordGenerator primaryWordGenerator =
+        new RandomWordGenerator(new SecureRandom(), Files.readAllLines(wordFile));
     final PassphraseGenerator dice = new PassphraseGenerator(primaryWordGenerator);
-    int numWords = (int) Math.ceil(primaryWordGenerator.calculateWordCount(DEFAULT_TARGET_ENTROPY));
-    if (nextArg < args.length) {
-      numWords = Integer.parseInt(args[nextArg++]);
-      if (nextArg < args.length) {
-        numPhrases = Integer.parseInt(args[nextArg++]);
-      }
+    if (wordCount == 0) {
+      wordCount = (int) Math.ceil(primaryWordGenerator.calculateWordCount(DEFAULT_TARGET_ENTROPY));
     }
-
-    dice.generatePassphrases(numPhrases, numWords, System.out::println);
+    dice.generatePassphrases(count, wordCount, System.out::println);
+    return 0;
   }
+
+  public static void main(String[] args) {
+    int exitCode = new CommandLine(new PassphraseGenCli()).execute(args);
+    System.exit(exitCode);
+  }
+
 }
 
 

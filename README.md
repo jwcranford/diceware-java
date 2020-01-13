@@ -9,7 +9,7 @@ at http://world.std.com/%7Ereinhold/dicewarefaq.html#computer.
 
 ## Why passphrases?
 
-The case for using a passphrase instead of a password is most succintly
+The case for using a passphrase instead of a password is most succinctly
 made in an XKCD comic at https://xkcd.com/936/.
 
 From http://www.diceware.com:
@@ -46,24 +46,26 @@ pphrasegen requires Java 8. Download and install the JRE from
 https://java.com if you haven't already.
 
 ```
-pphrasegen -h | --help
-   Prints this summary.
-pphrasegen file [w [p]]
-   Generates p passphrases of w words each from the given file.
-   The default behavior is to generate 20 passphrases, with the number
-   of words in each passphrase depending on the size of the input file.
-
-      # of words in file   # of words in passphrase
-      ------------------   ------------------------
-                    1024                          8
-                    2048                          7
-                    4096                          7
-                    8192                          6
+Usage: pphrasegen [-hV] [-c=<count>] [-w=<wordCount>] <wordFile>
+Generates passphrases based on a given word file.
+      <wordFile>            The file of words to use when generating a
+                              passphrase. The file contains one word per line.
+  -c, --count=<count>       Number of passphrases to generate (20 by default)
+  -h, --help                Show this help message and exit.
+  -V, --version             Print version information and exit.
+  -w, --words=<wordCount>   Number of words to include in each passphrase.
+                            By default, the number of words in each passphrase
+                              depends on the size of the input file.
+                                  # of words in file   # of words in passphrase
+                                  ------------------   ------------------------
+                                                1024                          8
+                                                2048                          7
+                                                4096                          7
+                                                8192                          6
 ```
 
 Note that both a shell script and a batch file is available in the bin
 directory.
-
 
 The default number of words in a passphrase was designed to get at least
 75 bits of entropy in each passphrase, according to the recommendation 
