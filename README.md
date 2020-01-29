@@ -1,3 +1,5 @@
+![Java CI](https://github.com/jwcranford/pphrasegen/workflows/Java%20CI/badge.svg?branch=master)
+
 # pphrasegen
 
 pphrasegen is a command-line tool to generate passphrases, based on the 
