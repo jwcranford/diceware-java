@@ -76,7 +76,14 @@ public final class PassphraseGenCli implements Callable<Integer> {
     Function<String,String> specialCharReplacer = createReplacer(random, SPECIAL, specialChars);
     Function<String,String> digitReplacer = createReplacer(random, DIGITS, digits);
     dice.generatePassphrases(count, wordCount,
-        s -> System.out.println(specialCharReplacer.compose(digitReplacer).apply(s)));
+        s -> {
+          System.out.println(s);
+          String replaced = specialCharReplacer.compose(digitReplacer).apply(s);
+          if (!replaced.equals(s)) {
+            System.out.println(replaced);
+            System.out.println();
+          }
+        });
     return 0;
   }
 
