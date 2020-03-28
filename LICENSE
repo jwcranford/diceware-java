@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2017 Jonathan W. Cranford
+Copyright (c) 2017-2020 Jonathan W. Cranford
 
 Diceware is Copyright © 1995-2017, Arnold G. Reinhold, Cambridge,
 Massachusetts USA. To the extent that a word list is protected by
@@ -8,16 +8,6 @@ copyright, A G Reinhold licenses its rights to the English Diceware
 Wordlist under the Creative Commons CC-BY 4.0 license
 (https://creativecommons.org/licenses/by/4.0/). Diceware is a
 trademark of A G Reinhold.
-
-Word lists from the Electronic Frontier Foundation (EFF) are distributed
-in accordance with the Creative Commons Attribution License (see 
-https://www.eff.org/copyright and 
-http://creativecommons.org/licenses/by/3.0/us/).
-
-Word lists from A G Reinold, Alan Beale, and EFF were modified to
-remove any PGP signatures and the mapping to actual dice to obtain
-simply the words from the list.  Other adaptations of the content are
-explained in the README.md file.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
