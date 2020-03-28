@@ -3,12 +3,16 @@ package com.github.jwcranford.pphrasegen;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -27,15 +31,17 @@ import java.util.stream.Stream;
  * @author Jonathan W. Cranford
  */
 @Command(name="pphrasegen", description="Generates passphrases based on a given word file.",
-    mixinStandardHelpOptions = true, version="pphrasegen 0.4.0")
+    mixinStandardHelpOptions = true, version="pphrasegen 0.5.0")
 public final class PassphraseGenCli implements Callable<Integer> {
 
   private static final double DEFAULT_TARGET_ENTROPY = 75.0;
   private static final int DEFAULT_NUM_PASSPHRASES = 20;
+  private static final String DEFAULT_WORDS_RESOURCE = "/diceware8k.txt";
+  private static final int DEFAULT_WORD_LIST_SIZE_HINT = 8192;
 
-  @Parameters(index = "0",
-      description = "The file of words to use when generating a passphrase. The file contains one word per line.")
-  private Path wordFile;
+  @Option(names = { "-f", "--file"},
+      description = "The word file to use when generating a passphrase. The file should contain one word per line. If not specified, an internal copy of diceware8k.txt is used.")
+  private Path wordFile = null;
 
   @Option(names = { "-c", "--count"}, description = "Number of passphrases to generate (${DEFAULT-VALUE} by default).")
   private int count = DEFAULT_NUM_PASSPHRASES;
@@ -67,8 +73,8 @@ public final class PassphraseGenCli implements Callable<Integer> {
   @Override
   public Integer call() throws IOException {
     final SecureRandom random = new SecureRandom();
-    final RandomWordGenerator primaryWordGenerator =
-        new RandomWordGenerator(random, Files.readAllLines(wordFile));
+    List<String> words = readWords();
+    final RandomWordGenerator primaryWordGenerator = new RandomWordGenerator(random, words);
     final PassphraseGenerator dice = new PassphraseGenerator(primaryWordGenerator);
     if (wordCount == 0) {
       wordCount = (int) Math.ceil(primaryWordGenerator.calculateWordCount(DEFAULT_TARGET_ENTROPY));
@@ -85,6 +91,21 @@ public final class PassphraseGenCli implements Callable<Integer> {
           }
         });
     return 0;
+  }
+
+  private List<String> readWords() throws IOException {
+    if (wordFile != null) {
+      return Files.readAllLines(wordFile);
+    }
+    try (InputStream resourceAsStream = getClass().getResourceAsStream(DEFAULT_WORDS_RESOURCE)) {
+      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resourceAsStream, StandardCharsets.UTF_8));
+      List<String> words = new ArrayList<>(DEFAULT_WORD_LIST_SIZE_HINT);
+      String s = null;
+      while ((s = bufferedReader.readLine()) != null) {
+        words.add(s);
+      }
+      return words;
+    }
   }
 
   private Function<String,String> createReplacer(Random random, String chars, int times) {

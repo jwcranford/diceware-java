@@ -45,14 +45,21 @@ verify the deployment.
 pphrasegen requires Java 8 or higher. Download and install the JRE from
 https://java.com if you haven't already.
 
-_TODO: replace this section with the actual help message._
 ```
-Usage: pphrasegen [-hV] [-c=<count>] [-w=<wordCount>] <wordFile>
+Usage: pphrasegen [-hV] [-c=<count>] [-d=<digits>] [-f=<wordFile>]
+                  [-s=<specialChars>] [-w=<wordCount>]
 Generates passphrases based on a given word file.
-      <wordFile>            The file of words to use when generating a
-                              passphrase. The file contains one word per line.
-  -c, --count=<count>       Number of passphrases to generate (20 by default)
+  -c, --count=<count>       Number of passphrases to generate (20 by default).
+  -d, --digits=<digits>     Number of digits to substitute at random locations
+                              in the generated passphrase.
+  -f, --file=<wordFile>     The word file to use when generating a passphrase.
+                              The file should contain one word per line. If not
+                              specified, an internal copy of diceware8k.txt is
+                              used.
   -h, --help                Show this help message and exit.
+  -s, --special=<specialChars>
+                            Number of special characters to substitute at
+                              random locations in the generated passphrase.
   -V, --version             Print version information and exit.
   -w, --words=<wordCount>   Number of words to include in each passphrase.
                             By default, the number of words in each passphrase
