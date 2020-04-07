@@ -13,6 +13,6 @@ class PassphraseGeneratorSpec extends Specification {
     def p = new PassphraseGenerator(supplier)
 
     expect:
-    "adam bobby charlie" == p.nextPassphrase(3)
+    ["adam", "bobby", "charlie"] == p.nextPassphrase(3)
   }
 }

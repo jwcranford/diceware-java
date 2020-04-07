@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,11 +30,10 @@ import java.util.stream.Stream;
  * @author Jonathan W. Cranford
  */
 @Command(name="pphrasegen", description="Generates passphrases based on a given word file.",
-    mixinStandardHelpOptions = true, version="pphrasegen 0.5.0")
+    mixinStandardHelpOptions = true, version="pphrasegen 0.6.0")
 public final class PassphraseGenCli implements Callable<Integer> {
 
-  private static final double DEFAULT_TARGET_ENTROPY = 75.0;
-  private static final int DEFAULT_NUM_PASSPHRASES = 20;
+  private static final int DEFAULT_NUM_PASSPHRASES = 5;
   private static final String DEFAULT_WORDS_RESOURCE = "/diceware8k.txt";
   private static final int DEFAULT_WORD_LIST_SIZE_HINT = 8192;
 
@@ -46,12 +44,12 @@ public final class PassphraseGenCli implements Callable<Integer> {
   @Option(names = { "-c", "--count"}, description = "Number of passphrases to generate (${DEFAULT-VALUE} by default).")
   private int count = DEFAULT_NUM_PASSPHRASES;
 
-  @Option(names = { "-s", "--special"}, description = "Number of special characters to substitute at random locations in the generated passphrase.")
+  @Option(names = { "-s", "--special"}, description = "Number of special characters to insert at random locations in the generated passphrase.")
   private int specialChars = 0;
 
   private static final String SPECIAL = "!=$%-*./";
 
-  @Option(names = { "-d", "--digits"}, description = "Number of digits to substitute at random locations in the generated passphrase." )
+  @Option(names = { "-d", "--digits"}, description = "Number of digits to insert at random locations in the generated passphrase." )
   private int digits = 0;
 
   private static final String DIGITS = "23456789";
@@ -77,18 +75,13 @@ public final class PassphraseGenCli implements Callable<Integer> {
     final RandomWordGenerator primaryWordGenerator = new RandomWordGenerator(random, words);
     final PassphraseGenerator dice = new PassphraseGenerator(primaryWordGenerator);
     if (wordCount == 0) {
-      wordCount = (int) Math.ceil(primaryWordGenerator.calculateWordCount(DEFAULT_TARGET_ENTROPY));
+      wordCount = (int) Math.ceil(primaryWordGenerator.defaultWordCount());
     }
-    Function<String,String> specialCharReplacer = createReplacer(random, SPECIAL, specialChars);
-    Function<String,String> digitReplacer = createReplacer(random, DIGITS, digits);
     dice.generatePassphrases(count, wordCount,
-        s -> {
-          System.out.println(s);
-          String replaced = specialCharReplacer.compose(digitReplacer).apply(s);
-          if (!replaced.equals(s)) {
-            System.out.println(replaced);
-            System.out.println();
-          }
+        ss -> {
+          addRandomCharRepeatedly(random, SPECIAL, specialChars, ss);
+          addRandomCharRepeatedly(random, DIGITS, digits, ss);
+          System.out.println(String.join(" ", ss));
         });
     return 0;
   }
@@ -108,12 +101,13 @@ public final class PassphraseGenCli implements Callable<Integer> {
     }
   }
 
-  private Function<String,String> createReplacer(Random random, String chars, int times) {
+  static void addRandomCharRepeatedly(Random random, String chars, int times, List<String> pphrase) {
     if (times > 0) {
-      return new RandomWordGenerator(random, Arrays.asList(chars.split("")))
-          .replaceRepeatedly(times);
+      RandomWordGenerator randomWordGenerator = new RandomWordGenerator(random, Arrays.asList(chars.split("")));
+      for (int i = 0; i < times; i++) {
+        pphrase.add(random.nextInt(pphrase.size() + 1), randomWordGenerator.get());
+      }
     }
-    return Function.identity();
   }
 
   public static void main(String[] args) {
@@ -125,30 +119,24 @@ public final class PassphraseGenCli implements Callable<Integer> {
 
 
 final class PassphraseGenerator {
-
   private final Supplier<String> primaryWordGenerator;
-
   PassphraseGenerator(Supplier<String> primaryWordGenerator) {
     this.primaryWordGenerator = primaryWordGenerator;
   }
 
-  /** Generates next passphrase with given number of words. */
-  String nextPassphrase(int numberWords) {
-    return Stream.generate(primaryWordGenerator).limit(numberWords).collect(Collectors.joining(" "));
+  List<String> nextPassphrase(int numberWords) {
+    return Stream.generate(primaryWordGenerator).limit(numberWords).collect(Collectors.toList());
   }
 
-  void generatePassphrases(int numPhrases, int numWords, Consumer<String> passphraseCallback) {
+  void generatePassphrases(int numPhrases, int numWords, Consumer<List<String>> callback) {
     Stream.generate(() -> nextPassphrase(numWords)).limit(numPhrases)
-        .forEach(passphraseCallback);
+        .forEach(callback);
   }
-
 }
-
 
 /**
  * Calculates the entropy in a dictionary of a given size.
  */
-// visible for unit tests
 class EntropyCalculator {
 
   private final int dictionarySize;
@@ -172,6 +160,9 @@ class EntropyCalculator {
 
 
 class RandomWordGenerator implements Supplier<String> {
+
+  private static final double DEFAULT_TARGET_ENTROPY = 75.0;
+
   private final List<String> words;
   private final Random random;
   private final EntropyCalculator entropyCalculator;
@@ -191,29 +182,8 @@ class RandomWordGenerator implements Supplier<String> {
     return random.nextInt(entropyCalculator.getEffectiveWordListSize());
   }
 
-  double calculateWordCount(double targetEntropy) {
-    return targetEntropy / entropyCalculator.getEntropyPerWord();
+  double defaultWordCount() {
+    return DEFAULT_TARGET_ENTROPY / entropyCalculator.getEntropyPerWord();
   }
 
-  String replaceRandomChar(String s) {
-    return replace(random.nextInt(s.length()), s, get());
-  }
-
-  Function<String,String> replaceRepeatedly(final int times) {
-    return base -> {
-      for (int i = 0; i < times; i++) {
-        base = replaceRandomChar(base);
-      }
-      return base;
-    };
-  }
-
-  // utility method for replacing a given index in a string
-  static String replace(int thisIndex, String inThisString, String withThat) {
-    String suffix = "";
-    if (thisIndex < inThisString.length()) {
-      suffix = inThisString.substring(thisIndex + 1);
-    }
-    return inThisString.substring(0, thisIndex) + withThat + suffix;
-  }
 }

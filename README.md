@@ -49,17 +49,17 @@ https://java.com if you haven't already.
 Usage: pphrasegen [-hV] [-c=<count>] [-d=<digits>] [-f=<wordFile>]
                   [-s=<specialChars>] [-w=<wordCount>]
 Generates passphrases based on a given word file.
-  -c, --count=<count>       Number of passphrases to generate (20 by default).
-  -d, --digits=<digits>     Number of digits to substitute at random locations
-                              in the generated passphrase.
+  -c, --count=<count>       Number of passphrases to generate (5 by default).
+  -d, --digits=<digits>     Number of digits to insert at random locations in
+                              the generated passphrase.
   -f, --file=<wordFile>     The word file to use when generating a passphrase.
                               The file should contain one word per line. If not
                               specified, an internal copy of diceware8k.txt is
                               used.
   -h, --help                Show this help message and exit.
   -s, --special=<specialChars>
-                            Number of special characters to substitute at
-                              random locations in the generated passphrase.
+                            Number of special characters to insert at random
+                              locations in the generated passphrase.
   -V, --version             Print version information and exit.
   -w, --words=<wordCount>   Number of words to include in each passphrase.
                             By default, the number of words in each passphrase
