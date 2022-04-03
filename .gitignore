@@ -8,3 +8,4 @@ build
 *.iml
 .DS_Store
 out/
+word-lists

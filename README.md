@@ -32,6 +32,29 @@ From http://www.diceware.com:
 > - Easy for you to type accurately
 
 
+Research published in 2012 also found that "a password-composition
+policy requiring long passwords with no other restrictions provides
+(relative to other tested policies) excellent resistance to guessing"
+(Kelley, Patrick Gage, Saranga Komanduri, Michelle L Mazurek, Richard
+Shay, Timothy Vidas, Lujo Bauer, Nicolas Christin, Lorrie Faith
+Cranor, and Julio Lopez. “Guess Again (and Again and Again): Measuring
+Password Strength by Simulating Password-Cracking Algorithms.” In
+Security and Privacy (SP), 2012 IEEE Symposium On, 523–537. IEEE,
+2012. Available at:
+http://ieeexplore.ieee.org/iel5/6233637/6234400/06234434.pdf).
+
+Citing that paper among many others, the U.S. government revised
+their password recommendations in 2017 to emphasize password length
+and memorability over password complexity. From NIST SP 800-63B
+(https://pages.nist.gov/800-63-3/sp800-63b.html):
+
+> Password length has been found to be a primary factor in characterizing 
+> password strength.... Users should be encouraged to make their passwords 
+> as lengthy as they want, within reason. Since the size of a hashed password 
+> is independent of its length, there is no reason not to permit the use of 
+> lengthy passwords (or pass phrases) if the user wishes. 
+
+
 ## Why another passphrase generator?
 
 - I like the diceware approach and explanation for generating passphrases.
@@ -89,41 +112,19 @@ Examples:
 * If another file were specified at the command-line with slightly fewer words,
   then only the first 4096 lines of the file would be used. 
 
-The default number of words in a passphrase was designed to get at least
-75 bits of entropy in each passphrase, according to the recommendation 
-at http://world.std.com/~reinhold/dicewarefaq.html#howlong.
-
-
-## What is entropy?
-
-From http://world.std.com/~reinhold/dicewarefaq.html#entropy:
-
-> Entropy tells how hard it will be to guess the passphrase itself even 
-  if an attacker knows the method you used to select your passphrase. A 
-  passphrase is more secure if it is selected using a method that has 
-  more entropy.
->
-> Entropy is measured in bits. The outcome of a single coin toss -- 
-  "heads or tails" -- has one bit of entropy.
-
 
 ## Word list
 
-The diceware8k.txt file from www.diceware.com is distributed with pphrasegen
-under the Creative Commons CC-BY 4.0 license 
-(https://creativecommons.org/licenses/by/4.0/). See the LICENSE file for details.
+The diceware8k.txt file from www.diceware.com is distributed with
+pphrasegen under the Creative Commons CC-BY 4.0 license
+(https://creativecommons.org/licenses/by/4.0/). See the LICENSE
+file for details.
 
 <table>
 <tr>
     <th>UE: Usable Entries</th>                     <td>8192</td>
 </tr><tr>
-    <th>E: Entropy bits per word [log2(UE)]</th>    <td>13</td>
-</tr><tr>
     <th>A: Average word length</th>                 <td>4.1</td>
-</tr><tr>
-    <th>W: # words to get at least 75 entropy bits [ceiling(75/E)]</th> <td>6</td>
-</tr><tr>
-    <th>Average passphrase length for at least 75 entropy bits [A*W]</th>   <td>25</td>
 </tr>
 </table>
 
