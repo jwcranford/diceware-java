@@ -2,11 +2,12 @@
 
 # pphrasegen
 
-pphrasegen is a command-line tool to generate passphrases, based on the 
-diceware method described at http://www.diceware.com.  Instead of using 
-dice to generate a random passphrase, pphrasegen uses
-a cryptographically secure random number generator, as briefly described
-at http://world.std.com/%7Ereinhold/dicewarefaq.html#computer.
+pphrasegen is a command-line tool to generate passphrases, based
+on the diceware method described at http://www.diceware.com.  Instead
+of using dice, pphrasegen uses a cryptographically secure random
+number generator, as briefly described at
+http://world.std.com/%7Ereinhold/dicewarefaq.html#computer, to pick
+random words from a given word list to compose a passphrase.
 
 
 ## Why passphrases?
@@ -122,15 +123,19 @@ file for details.
 
 <table>
 <tr>
-    <th>UE: Usable Entries</th>                     <td>8192</td>
+    <th>Usable Entries</th>                     <td>8192</td>
 </tr><tr>
-    <th>A: Average word length</th>                 <td>4.1</td>
+    <th>Average word length</th>                 <td>4.1</td>
 </tr>
 </table>
 
 Alternative word lists can be constructed from the standard diceware
-files at www.diceware.com and at  
-https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases.
+files at www.diceware.com, from the EFF diceware lists at 
+https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases, 
+or just by pulling words from /usr/share/dict/words on a Unix-like computer.
+A word list is simply a text file with one word per line, so 
+customizing and experimenting with multiple word lists is 
+rather straight-forward.
 
 
 ## How to verify the security of a word list
@@ -143,8 +148,14 @@ Verifying this condition is a simple matter at a Unix command-line;
 shouldn't be any.
 
 
+## Additional security tips
+
+* Use a password manager.
+* Use two-factor authentication where available.
+
+
 ## Building from source
 
-Gradle and Java 8+ are required to build pphrasegen.
+Java 8+ is required to build pphrasegen from source.
 
 $ ./gradlew build
