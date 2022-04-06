@@ -1,6 +1,6 @@
 plugins {
   id 'application'
-  id 'nebula.release' version '9.2.0'
+  id 'nebula.release' version '16.0.0'
   id 'groovy'
 }
 
